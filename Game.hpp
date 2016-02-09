@@ -25,11 +25,11 @@ private:
 
 private:
 	static const sf::Time	TimePerFrame;
+
 	sf::RenderWindow&		mWindow;
 	sf::Font				mFont;
 	sf::Text				mStatisticsText;
 	sf::Time				mStatisticsUpdateTime;
-
 	std::size_t				mStatisticsNumFrames;
 	World					mWorld;
 };

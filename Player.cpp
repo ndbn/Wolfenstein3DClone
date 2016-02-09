@@ -76,7 +76,7 @@ void Player::update(sf::Time dt, sf::RenderWindow& window)
 
 	Vector3f collision = mLevel.checkCollision(oldPosition, mewPosition, PlayerSize, PlayerSize);
 
-	//mMovement *= collision;
+	mMovement *= collision;
 
 	mCamera.move(mMovement, MovementAmount);
 }

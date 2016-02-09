@@ -65,14 +65,14 @@ Vector3f Level::checkCollision(const Vector3f& oldPos, const Vector3f& newPos, f
 			}
 		}
 
+		for (auto& door : mDoors)
+		{
+			Vector2f doorSize = door->getDoorSize();
+			Vector3f doorPos3f = door->getPosition();
+			Vector2f doorPos2f = { door->getPosition().x, door->getPosition().z };
 
-		//for (auto& door : mDoors)
-		//{
-		//	Vector2f doorSize = door->getDoorSize();
-		//	Vector3f doorPos3f = door->getPosition();
-		//	Vector2f doorPos2f = { door->getPosition().x, door->getPosition().z };
-		//	collisionVector *= rectCollide(oldPos2, newPos2, objectSize, doorPos2f, doorSize);
-		//}
+			collisionVector *= rectCollide(oldPos2, newPos2, objectSize, doorPos2f, doorSize);
+		}
 	}
 
 	return{ collisionVector.x, 0, collisionVector.y };
@@ -168,12 +168,12 @@ void Level::addDoor(unsigned int x, unsigned int y)
 {
 	Vector3f doorPosition;
 	Vector3f doorRotation;
+
 	bool xDoor = (mMap.getPixel(x, y - 1)  == sf::Color::Black) && (mMap.getPixel(x, y + 1) == sf::Color::Black);
 	bool yDoor = (mMap.getPixel(x - 1, y) == sf::Color::Black) && (mMap.getPixel(x + 1, y) == sf::Color::Black);
 
 	if (!(xDoor ^ yDoor))
 		throw std::runtime_error("Level Generation has failed! :( You placed a door in an invalid location at " + std::to_string(x) + ", " + std::to_string(y));
-
 
 
 	if (yDoor)
@@ -210,10 +210,12 @@ void Level::generateLevel()
 	{
 		for (unsigned int j = 0; j < height; ++j)
 		{
-			int r = mMap.getPixel(i, j).r;
-			int g = mMap.getPixel(i, j).g;
-			int b = mMap.getPixel(i, j).b;
+			unsigned r = mMap.getPixel(i, j).r;
+			unsigned g = mMap.getPixel(i, j).g;
+			unsigned b = mMap.getPixel(i, j).b;
+
 			unsigned num = createRGB(r, g, b);
+
 			if ((num & 0xFFFFFF) == 0)
 				continue;
 
@@ -232,7 +234,6 @@ void Level::generateLevel()
 			//Generate Walls
 			texCoords = calcTexCoords((num & 0xFF0000) >> 16);
 
-
 			if (mMap.getPixel(i, j - 1) == sf::Color::Black)
 			{
 				addFace(indices, vertices.size(), false);
@@ -250,6 +251,7 @@ void Level::generateLevel()
 				addFace(indices, vertices.size(), true);
 				addVertices(vertices, 0, j, i, false, true, true, texCoords);
 			}
+
 			if (mMap.getPixel(i + 1, j) == sf::Color::Black)
 			{
 				addFace(indices, vertices.size(), false);

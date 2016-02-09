@@ -3,7 +3,7 @@
 #include "Vertex.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <iostream>
+
 
 World::World(sf::RenderWindow& window)
 	: mWindow(window)

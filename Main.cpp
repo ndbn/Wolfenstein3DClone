@@ -11,7 +11,14 @@ int main()
 {
 	try
 	{
-		sf::RenderWindow window(sf::VideoMode(800, 600), "opengl template", sf::Style::Close);
+		sf::ContextSettings settings;
+		settings.depthBits = 24;
+		settings.stencilBits = 8;
+		settings.antialiasingLevel = 4;
+		settings.majorVersion = 4;
+		settings.minorVersion = 0;
+
+		sf::RenderWindow window(sf::VideoMode(800, 600), "opengl template", sf::Style::Close, settings);
 
 		glewExperimental = GL_TRUE;
 
