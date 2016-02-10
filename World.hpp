@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Player.hpp"
+#include "Level.hpp"
 
 
 namespace sf
@@ -17,7 +17,5 @@ public:
 	void draw();
 
 private:
-	sf::RenderWindow& mWindow;
 	Level mLevel;
-	Player mPlayer;
 };

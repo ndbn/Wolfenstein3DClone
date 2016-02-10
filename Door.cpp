@@ -1,11 +1,20 @@
 #include "Door.hpp"
 #include "Utility.hpp"
 
+#include <iostream>
 
 Door::Door(const Vector3f& poisition, const Vector3f& rotation, const Material& material)
 	: mTransform(poisition, rotation)
 	, mShader()
-	, mMaterial(material) 
+	, mMaterial(material)
+	, mIsOpening(false)
+	, mOpenPosition(rotation.y == 90 ? poisition - Vector3f(0, 0, 0.9f) : poisition - Vector3f(0.9f, 0, 0))
+	, mClosePosition(poisition)
+	, mOpeningStartTime()
+	, mOpenTime()
+	, mClosingStartTime()
+	, mCloseTime()
+	, mTimer(sf::Time::Zero)
 {
 	Vertex vertices[] =
 	{
@@ -48,9 +57,48 @@ Door::Door(const Vector3f& poisition, const Vector3f& rotation, const Material& 
 	mMesh.addVertices(vertices, ARRAY_SIZE(vertices), indices, ARRAY_SIZE(indices));
 }
 
+void Door::open(sf::Time dt)
+{
+	if (mIsOpening)
+		return;
+
+	mOpeningStartTime = dt.asSeconds();
+	mOpenTime = mOpeningStartTime + TIME_TO_OPEN;
+	mClosingStartTime = mOpenTime + CLOSE_DELAY;
+	mCloseTime = mClosingStartTime + TIME_TO_OPEN;
+	std::cout << mOpenTime << '\n';
+	mIsOpening = true;
+}
+
 void Door::update(sf::Time dt)
 {
+	mTimer += dt;
 
+	if (mIsOpening)
+	{
+		if (mTimer.asSeconds() < mOpenTime)
+		{
+			float factor = (mTimer.asSeconds() - mOpeningStartTime) / TIME_TO_OPEN;
+			std::cout << factor << '\n';
+			mTransform.setPosition(Vector3f::lerp(mClosePosition, mOpenPosition, factor));
+			
+		}
+		else if (mTimer.asSeconds() < mClosingStartTime)
+		{
+			mTransform.setPosition(mOpenPosition);
+		}
+		else if (mTimer.asSeconds() < mCloseTime)
+		{
+			float factor = (mTimer.asSeconds() - mClosingStartTime) / TIME_TO_OPEN;
+			mTransform.setPosition(Vector3f::lerp(mOpenPosition, mClosePosition, factor));
+		}
+		else
+		{
+			mTimer = sf::Time::Zero;
+			mTransform.setPosition(mClosePosition);
+			mIsOpening = false;
+		}
+	}
 }
 
 void Door::draw()
@@ -64,7 +112,10 @@ Vector3f Door::getPosition() const
 	return mTransform.getPosition();
 }
 
-Vector2f Door::getDoorSize() const
+Vector2f Door::getSize() const
 {
-	return{ LENGTH, WIDTH };
+	if (mTransform.getRotation().y == 90)
+		return{ WIDTH, LENGTH };
+	else
+		return{ LENGTH, WIDTH };
 }

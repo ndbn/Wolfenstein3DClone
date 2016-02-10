@@ -51,6 +51,12 @@ struct Vector3f
 		return{ x / len, y / len, z / len };
 	}
 
+	template<typename T>
+	static inline Vector3f lerp(const Vector3f& s, const Vector3f& e, T l)
+	{
+		return s + (e - s) * l;
+	}
+
 	inline Vector3f operator+(const Vector3f& r) const { return{ x + r.x, y + r.y, z + r.z }; }
 	inline Vector3f operator-(const Vector3f& r) const { return{ x - r.x, y - r.y, z - r.z }; }
 	inline Vector3f operator*(float f) const { return{ x * f, y * f, z * f }; }

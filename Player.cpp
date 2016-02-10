@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "Utility.hpp"
+#include "Level.hpp"
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>

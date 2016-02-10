@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Camera.hpp"
-#include "Level.hpp"
+
+class Level;
 
 namespace sf
 {

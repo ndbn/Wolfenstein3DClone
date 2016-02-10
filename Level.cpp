@@ -1,13 +1,18 @@
 #include "Level.hpp"
 
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
 
-Level::Level(const std::string& map, const std::string& textures)
-	: mMesh()
+
+Level::Level(sf::RenderWindow& window, const std::string& map, const std::string& textures)
+	: mWindow(window)
+	, mMesh()
 	, mShader()
 	, mMaterial(textures)
 	, mTransform()
 	, mMap()
 	, mDoors()
+	, mPlayer(*this, { 7, 0.4375f, 7 })
 {
 	if (!mMap.loadFromFile("res/bitmaps/" + map))
 		throw std::runtime_error("can't load map");
@@ -17,13 +22,27 @@ Level::Level(const std::string& map, const std::string& textures)
 
 void Level::update(sf::Time dt)
 {
-	for(auto& door : mDoors)
+	static const float OPEN_DISTANCE = 1.0f;
+
+	for (auto& door : mDoors)
+	{
 		door->update(dt);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) /*&& run*/)
+		{
+			Vector3f delta = door->getPosition() - mPlayer.getCamera().getPosition();
+			if (delta.length() < OPEN_DISTANCE)
+				door->open(dt);
+		}
+	}
+
+	mPlayer.update(dt, mWindow);
 }
 
 void Level::draw()
 {
 	mShader.updateUniforms(mTransform.getProjectedTransformation(), mMaterial);
+
+	mPlayer.draw();
 
 	mMesh.draw();
 
@@ -56,18 +75,20 @@ Vector3f Level::checkCollision(const Vector3f& oldPos, const Vector3f& newPos, f
 				int r = mMap.getPixel(i, j).r;
 				int g = mMap.getPixel(i, j).g;
 				int b = mMap.getPixel(i, j).b;
+
 				unsigned num = createRGB(r, g, b);
+
 				if ((num & 0xFFFFFF) == 0)
 				{
-					collisionVector *= rectCollide(oldPos2, newPos2, objectSize, blockSize * Vector2f(static_cast<float>(i), static_cast<float>(j)), blockSize);
-				
+					Vector2f block(blockSize.x * static_cast<float>(i), blockSize.y * static_cast<float>(j));
+					collisionVector *= rectCollide(oldPos2, newPos2, objectSize, block, blockSize);
 				}
 			}
 		}
 
 		for (auto& door : mDoors)
 		{
-			Vector2f doorSize = door->getDoorSize();
+			Vector2f doorSize = door->getSize();
 			Vector3f doorPos3f = door->getPosition();
 			Vector2f doorPos2f = { door->getPosition().x, door->getPosition().z };
 
@@ -166,6 +187,8 @@ void Level::addVertices(std::vector<Vertex>& vertices, unsigned int i, unsigned 
 
 void Level::addDoor(unsigned int x, unsigned int y)
 {
+	static const float DOOR_OPEN_MOVEMENT_AMOUNT = 0.9f;
+
 	Vector3f doorPosition;
 	Vector3f doorRotation;
 
@@ -173,13 +196,10 @@ void Level::addDoor(unsigned int x, unsigned int y)
 	bool yDoor = (mMap.getPixel(x - 1, y) == sf::Color::Black) && (mMap.getPixel(x + 1, y) == sf::Color::Black);
 
 	if (!(xDoor ^ yDoor))
-		throw std::runtime_error("Level Generation has failed! :( You placed a door in an invalid location at " + std::to_string(x) + ", " + std::to_string(y));
-
+		throw std::runtime_error("Level Generation has failed! adding doors");
 
 	if (yDoor)
-	{
 		doorPosition = { (float)x, 0, y + SPOT_LENGTH / 2 };
-	}
 
 	if (xDoor)
 	{

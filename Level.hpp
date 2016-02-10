@@ -5,6 +5,7 @@
 #include "Transform.hpp"
 #include "Material.hpp"
 #include "Door.hpp"
+#include "Player.hpp"
 
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/Image.hpp>
@@ -23,11 +24,13 @@ class Level
 	const int NUM_TEXTURES = static_cast<int>(std::pow(2, NUM_TEX_EXP));
 
 public:
-	Level(const std::string& map, const std::string& textures);
+	Level(sf::RenderWindow& window, const std::string& map, const std::string& textures);
 
 	void update(sf::Time dt);
 	void draw();
 	Vector3f checkCollision(const Vector3f& oldPos, const Vector3f&  newPos, float objectWidth, float objectLength) const;
+
+	Camera& getCamera() { return mPlayer.getCamera(); }
 
 private:
 	unsigned createRGB(int r, int g, int b) const;
@@ -42,10 +45,13 @@ private:
 	void generateLevel();
 
 private:
+	sf::RenderWindow& mWindow;
+
 	Mesh mMesh;
 	BasicShader mShader;
 	Material mMaterial;
 	Transform mTransform;
 	sf::Image mMap;
 	std::vector<std::unique_ptr<Door>> mDoors;
+	Player mPlayer;
 };
