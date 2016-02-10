@@ -158,32 +158,32 @@ std::array<float, 4> Level::calcTexCoords(unsigned int value)
 	return result;
 }
 
-void Level::addVertices(std::vector<Vertex>& vertices, unsigned int i, unsigned int j, unsigned int offset, bool a, bool b, bool c, const std::array<float, 4>& texCoords)
+void Level::addVertices(std::vector<Vertex>& vertices, unsigned int i, unsigned int j, unsigned int offset, bool x, bool y, bool z, const std::array<float, 4>& texCoords)
 {
-	float x = static_cast<float>(i);
-	float y = static_cast<float>(j);
-	float z = static_cast<float>(offset);
+	float a = static_cast<float>(i);
+	float b = static_cast<float>(j);
+	float c = static_cast<float>(offset);
 
-	if (a && c)
+	if (x && z)
 	{
-		vertices.emplace_back(Vertex({ x,			z,			y			},	{ texCoords[1], texCoords[3] }));
-		vertices.emplace_back(Vertex({ x + WIDTH,	z,			y			},	{ texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ x + WIDTH,	z,			y + HEIGHT	},	{ texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ x,			z,			y + HEIGHT	},	{ texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ a,			c,			b			},	{ texCoords[1], texCoords[3] }));
+		vertices.emplace_back(Vertex({ a + WIDTH,	c,			b			},	{ texCoords[0], texCoords[3] }));
+		vertices.emplace_back(Vertex({ a + WIDTH,	c,			b + HEIGHT	},	{ texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ a,			c,			b + HEIGHT	},	{ texCoords[1], texCoords[2] }));
 	}
-	else if (a && b)
+	else if (x && y)
 	{
-		vertices.emplace_back(Vertex({ x,			y,			z			}, { texCoords[1], texCoords[3] }));
-		vertices.emplace_back(Vertex({ x + WIDTH,	y,			z			}, { texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ x + WIDTH,	y + LENGTH,	z			}, { texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ x,			y + LENGTH,	z			}, { texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ a,			b,			c			}, { texCoords[1], texCoords[3] }));
+		vertices.emplace_back(Vertex({ a + WIDTH,	b,			c			}, { texCoords[0], texCoords[3] }));
+		vertices.emplace_back(Vertex({ a + WIDTH,	b + LENGTH,	c			}, { texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ a,			b + LENGTH,	c			}, { texCoords[1], texCoords[2] }));
 	}
-	else if (b && c)
+	else if (y && z)
 	{
-		vertices.emplace_back(Vertex({ z,			x,			y			}, { texCoords[1], texCoords[3] }));
-		vertices.emplace_back(Vertex({ z,			x,			y + HEIGHT	}, { texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ z,			x + LENGTH,	y + HEIGHT	}, { texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ z,			x + LENGTH,	y			}, { texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ c,			a,			b			}, { texCoords[1], texCoords[3] }));
+		vertices.emplace_back(Vertex({ c,			a,			b + HEIGHT	}, { texCoords[0], texCoords[3] }));
+		vertices.emplace_back(Vertex({ c,			a + LENGTH,	b + HEIGHT	}, { texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ c,			a + LENGTH,	b			}, { texCoords[1], texCoords[2] }));
 	}
 	else
 	{
