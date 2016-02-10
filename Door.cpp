@@ -18,25 +18,25 @@ Door::Door(const Vector3f& poisition, const Vector3f& rotation, const Material& 
 {
 	Vertex vertices[] =
 	{
-		{ { START,START,START },{ 0.5f,1 } },
-		{ { START,HEIGHT,START },{ 0.5f,0.75f } },
-		{ { LENGTH,HEIGHT,START },{ 0.75f,0.75f } },
-		{ { LENGTH,START,START },{ 0.75f,1 } },
+		{ { START,	START,	START	},	{ 0.5f,		1		} },
+		{ { START,	HEIGHT,	START	},	{ 0.5f,		0.75f	} },
+		{ { WIDTH,	HEIGHT,	START	},	{ 0.75f,	0.75f	} },
+		{ { WIDTH,	START,	START	},	{ 0.75f,	1		} },
 
-		{ { START,START,START },{ 0.73f,1 } },
-		{ { START,HEIGHT,START },{ 0.73f,0.75f } },
-		{ { START,HEIGHT,WIDTH },{ 0.75f,0.75f } },
-		{ { START,START,WIDTH },{ 0.75f,1 } },
+		{ { START,	START,	START	},	{ 0.73f,	1		} },
+		{ { START,	HEIGHT,	START	},	{ 0.73f,	0.75f	} },
+		{ { START,	HEIGHT,	LENGTH	},	{ 0.75f,	0.75f	} },
+		{ { START,	START,	LENGTH	},	{ 0.75f,	1		} },
 
-		{ { START,START,WIDTH },{ 0.5f,1 } },
-		{ { START,HEIGHT,WIDTH },{ 0.5f,0.75f } },
-		{ { LENGTH,HEIGHT,WIDTH },{ 0.75f,0.75f } },
-		{ { LENGTH,START,WIDTH },{ 0.75f,1 } },
+		{ { START,	START,	LENGTH },	{ 0.5f,		1		} },
+		{ { START,	HEIGHT,	LENGTH },	{ 0.5f,		0.75f	} },
+		{ { WIDTH,	HEIGHT,	LENGTH },	{ 0.75f,	0.75f	} },
+		{ { WIDTH,	START,	LENGTH },	{ 0.75f,	1		} },
 
-		{ { LENGTH,START,START },{ 0.73f,1 } },
-		{ { LENGTH,HEIGHT,START },{ 0.73f,0.75f } },
-		{ { LENGTH,HEIGHT,WIDTH },{ 0.75f,0.75f } },
-		{ { LENGTH,START,WIDTH },{ 0.75f,1 } }
+		{ { WIDTH,	START,	START	},	{ 0.73f,	1		} },
+		{ { WIDTH,	HEIGHT,	START	},	{ 0.73f,	0.75f	} },
+		{ { WIDTH,	HEIGHT,	LENGTH	},	{ 0.75f,	0.75f	} },
+		{ { WIDTH,	START,	LENGTH	},	{ 0.75f,	1		} }
 	};
 
 	unsigned int indices[] =
@@ -114,7 +114,7 @@ Vector3f Door::getPosition() const
 Vector2f Door::getSize() const
 {
 	if (mTransform.getRotation().y == 90)
-		return{ WIDTH, LENGTH };
-	else
 		return{ LENGTH, WIDTH };
+	else
+		return{ WIDTH, LENGTH };
 }
