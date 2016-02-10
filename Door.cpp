@@ -66,7 +66,7 @@ void Door::open(sf::Time dt)
 	mOpenTime = mOpeningStartTime + TIME_TO_OPEN;
 	mClosingStartTime = mOpenTime + CLOSE_DELAY;
 	mCloseTime = mClosingStartTime + TIME_TO_OPEN;
-	std::cout << mOpenTime << '\n';
+
 	mIsOpening = true;
 }
 
@@ -79,7 +79,6 @@ void Door::update(sf::Time dt)
 		if (mTimer.asSeconds() < mOpenTime)
 		{
 			float factor = (mTimer.asSeconds() - mOpeningStartTime) / TIME_TO_OPEN;
-			std::cout << factor << '\n';
 			mTransform.setPosition(Vector3f::lerp(mClosePosition, mOpenPosition, factor));
 			
 		}
