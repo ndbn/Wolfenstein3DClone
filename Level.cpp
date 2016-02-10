@@ -3,6 +3,13 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
+namespace
+{
+	unsigned createRGB(int r, int g, int b)
+	{
+		return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+	}
+}
 
 Level::Level(sf::RenderWindow& window, const std::string& map, const std::string& textures)
 	: mWindow(window)
@@ -50,11 +57,6 @@ void Level::draw()
 		door->draw();
 }
 
-unsigned Level::createRGB(int r, int g, int b) const
-{
-	return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
-}
-
 Vector3f Level::checkCollision(const Vector3f& oldPos, const Vector3f& newPos, float objectWidth, float objectLength) const
 {
 	Vector2f collisionVector = { 1, 1 };
@@ -62,7 +64,7 @@ Vector3f Level::checkCollision(const Vector3f& oldPos, const Vector3f& newPos, f
 
 	if (movementVector.length() > 0)
 	{
-		Vector2f blockSize = { SPOT_WIDTH, SPOT_LENGTH };
+		Vector2f blockSize = { WIDTH, LENGTH };
 		Vector2f objectSize = { objectWidth, objectLength };
 
 		Vector2f oldPos2 = { oldPos.x, oldPos.z };
@@ -156,28 +158,32 @@ std::array<float, 4> Level::calcTexCoords(unsigned int value)
 	return result;
 }
 
-void Level::addVertices(std::vector<Vertex>& vertices, unsigned int i, unsigned int j, unsigned int offset, bool x, bool y, bool z, const std::array<float, 4>& texCoords)
+void Level::addVertices(std::vector<Vertex>& vertices, unsigned int i, unsigned int j, unsigned int offset, bool a, bool b, bool c, const std::array<float, 4>& texCoords)
 {
-	if (x && z)
+	float x = static_cast<float>(i);
+	float y = static_cast<float>(j);
+	float z = static_cast<float>(offset);
+
+	if (a && c)
 	{
-		vertices.emplace_back(Vertex({ i		* SPOT_WIDTH, offset	* SPOT_HEIGHT, j		* SPOT_LENGTH }, { texCoords[1], texCoords[3] }));
-		vertices.emplace_back(Vertex({ (i + 1)	* SPOT_WIDTH, offset	* SPOT_HEIGHT, j		* SPOT_LENGTH }, { texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ (i + 1)	* SPOT_WIDTH, offset	* SPOT_HEIGHT, (j + 1)	* SPOT_LENGTH }, { texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ i		* SPOT_WIDTH, offset	* SPOT_HEIGHT, (j + 1)	* SPOT_LENGTH }, { texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ x,			z,			y			},	{ texCoords[1], texCoords[3] }));
+		vertices.emplace_back(Vertex({ x + WIDTH,	z,			y			},	{ texCoords[0], texCoords[3] }));
+		vertices.emplace_back(Vertex({ x + WIDTH,	z,			y + HEIGHT	},	{ texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ x,			z,			y + HEIGHT	},	{ texCoords[1], texCoords[2] }));
 	}
-	else if (x && y)
+	else if (a && b)
 	{
-		vertices.emplace_back(Vertex({ i		* SPOT_WIDTH, j			* SPOT_HEIGHT, offset	* SPOT_LENGTH }, { texCoords[1], texCoords[3] }));
-		vertices.emplace_back(Vertex({ (i + 1)	* SPOT_WIDTH, j			* SPOT_HEIGHT, offset	* SPOT_LENGTH }, { texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ (i + 1)	* SPOT_WIDTH, (j + 1)	* SPOT_HEIGHT, offset	* SPOT_LENGTH }, { texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ i		* SPOT_WIDTH, (j + 1)	* SPOT_HEIGHT, offset	* SPOT_LENGTH }, { texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ x,			y,			z			}, { texCoords[1], texCoords[3] }));
+		vertices.emplace_back(Vertex({ x + WIDTH,	y,			z			}, { texCoords[0], texCoords[3] }));
+		vertices.emplace_back(Vertex({ x + WIDTH,	y + LENGTH,	z			}, { texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ x,			y + LENGTH,	z			}, { texCoords[1], texCoords[2] }));
 	}
-	else if (y && z)
+	else if (b && c)
 	{
-		vertices.emplace_back(Vertex({ offset	* SPOT_WIDTH, i			* SPOT_HEIGHT, j		* SPOT_LENGTH }, { texCoords[1], texCoords[3] }));
-		vertices.emplace_back(Vertex({ offset	* SPOT_WIDTH, i			* SPOT_HEIGHT, (j + 1)	* SPOT_LENGTH }, { texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ offset	* SPOT_WIDTH, (i + 1)	* SPOT_HEIGHT, (j + 1)	* SPOT_LENGTH }, { texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ offset	* SPOT_WIDTH, (i + 1)	* SPOT_HEIGHT, j		* SPOT_LENGTH }, { texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ z,			x,			y			}, { texCoords[1], texCoords[3] }));
+		vertices.emplace_back(Vertex({ z,			x,			y + HEIGHT	}, { texCoords[0], texCoords[3] }));
+		vertices.emplace_back(Vertex({ z,			x + LENGTH,	y + HEIGHT	}, { texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ z,			x + LENGTH,	y			}, { texCoords[1], texCoords[2] }));
 	}
 	else
 	{
@@ -199,11 +205,11 @@ void Level::addDoor(unsigned int x, unsigned int y)
 		throw std::runtime_error("Level Generation has failed! adding doors");
 
 	if (yDoor)
-		doorPosition = { (float)x, 0, y + SPOT_LENGTH / 2 };
+		doorPosition = { (float)x, 0, y + LENGTH / 2 };
 
 	if (xDoor)
 	{
-		doorPosition = { x + SPOT_WIDTH / 2, 0, (float)y };
+		doorPosition = { x + WIDTH / 2, 0, (float)y };
 		doorRotation = { 0, 90, 0 };
 	}
 

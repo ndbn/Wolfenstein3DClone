@@ -102,7 +102,6 @@ void Shader::compileShader()
 
 void Shader::updateUniforms(const Matrix4f& projectedMatrix, const Material& material)
 {
-
 }
 
 void Shader::setAttribLocation(const std::string& attributeName, int location)

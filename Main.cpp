@@ -12,6 +12,7 @@ int main()
 	try
 	{
 		sf::ContextSettings settings;
+
 		settings.depthBits = 24;
 		settings.stencilBits = 8;
 		settings.antialiasingLevel = 4;
