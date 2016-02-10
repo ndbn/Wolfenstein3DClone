@@ -168,22 +168,22 @@ void Level::addVertices(std::vector<Vertex>& vertices, unsigned int i, unsigned 
 	{
 		vertices.emplace_back(Vertex({ a,			c,			b			},	{ texCoords[1], texCoords[3] }));
 		vertices.emplace_back(Vertex({ a + WIDTH,	c,			b			},	{ texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ a + WIDTH,	c,			b + HEIGHT	},	{ texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ a,			c,			b + HEIGHT	},	{ texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ a + WIDTH,	c,			b + LENGTH	},	{ texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ a,			c,			b + LENGTH	},	{ texCoords[1], texCoords[2] }));
 	}
 	else if (x && y)
 	{
 		vertices.emplace_back(Vertex({ a,			b,			c			}, { texCoords[1], texCoords[3] }));
 		vertices.emplace_back(Vertex({ a + WIDTH,	b,			c			}, { texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ a + WIDTH,	b + LENGTH,	c			}, { texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ a,			b + LENGTH,	c			}, { texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ a + WIDTH,	b + HEIGHT,	c			}, { texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ a,			b + HEIGHT,	c			}, { texCoords[1], texCoords[2] }));
 	}
 	else if (y && z)
 	{
 		vertices.emplace_back(Vertex({ c,			a,			b			}, { texCoords[1], texCoords[3] }));
-		vertices.emplace_back(Vertex({ c,			a,			b + HEIGHT	}, { texCoords[0], texCoords[3] }));
-		vertices.emplace_back(Vertex({ c,			a + LENGTH,	b + HEIGHT	}, { texCoords[0], texCoords[2] }));
-		vertices.emplace_back(Vertex({ c,			a + LENGTH,	b			}, { texCoords[1], texCoords[2] }));
+		vertices.emplace_back(Vertex({ c,			a,			b + LENGTH	}, { texCoords[0], texCoords[3] }));
+		vertices.emplace_back(Vertex({ c,			a + HEIGHT,	b + LENGTH	}, { texCoords[0], texCoords[2] }));
+		vertices.emplace_back(Vertex({ c,			a + HEIGHT,	b			}, { texCoords[1], texCoords[2] }));
 	}
 	else
 	{
