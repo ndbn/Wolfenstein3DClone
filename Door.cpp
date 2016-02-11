@@ -66,7 +66,7 @@ void Door::open(sf::Time dt)
 	mOpenTime = mOpeningStartTime + TIME_TO_OPEN;
 	mClosingStartTime = mOpenTime + CLOSE_DELAY;
 	mCloseTime = mClosingStartTime + TIME_TO_OPEN;
-
+	mTimer = sf::Time::Zero;
 	mIsOpening = true;
 }
 
