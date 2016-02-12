@@ -7,9 +7,6 @@
 
 class Door
 {
-	//const float LENGTH = 1;
-	//const float HEIGHT = 1;
-	//const float WIDTH = 0.125f;
 	const float WIDTH = 1;
 	const float HEIGHT = 1;
 	const float LENGTH = 0.125f;

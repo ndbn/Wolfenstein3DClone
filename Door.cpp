@@ -1,7 +1,6 @@
 #include "Door.hpp"
 #include "Utility.hpp"
 
-#include <iostream>
 
 Door::Door(const Vector3f& poisition, const Vector3f& rotation, const Material& material)
 	: mTransform(poisition, rotation)
